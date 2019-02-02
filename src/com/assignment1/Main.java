@@ -13,7 +13,86 @@ public class Main {
         if (isValidInput(userInput)) {//check if input is valid
             outputString = infix2Postfix(userInput, stack);
         }
-        JOptionPane.showMessageDialog(null, "Answer is: " + outputString);
+        CalculatePostfix(outputString,stack);
+        float answer = (float)stack.pop();// our answer is stored in the stack
+        JOptionPane.showMessageDialog(null, "Infix Expression: "+userInput+ "\n"+"Postfix is: " + outputString+"\n" + "Evaluates to: "+ answer);
+    }
+
+    static void CalculatePostfix(String expression, ArrayStack stack)
+    {
+
+        float answer = 0;
+        for (int i=0;i<expression.length();i++)//loop through all elements of expression
+        {
+           char c = expression.charAt(i);
+           if(Character.isDigit(c))//if its a digit, push to stack
+           {
+               int num = Character.getNumericValue(c);
+               float val2Push = num;//convert our char to an int and then cast to a float, float will be our standard type for all calculations
+               stack.push(val2Push);
+           }
+           else//if operator, pop top two elements, calculate the result, and push it to the stack
+           {
+               switch (c){
+                   case '+':
+                       StackAddition(stack);
+                       break;
+                   case '-':
+                       StackSubtraction(stack);
+                       break;
+                   case '*':
+                       StackMultiplication(stack);
+                       break;
+                   case '/':
+                       StackDivision(stack);
+                       break;
+                   case '^':
+                       StackPower(stack);
+                       break;
+               }
+           }
+        }
+
+    }
+//Utility methods for calculations
+    static void StackAddition(ArrayStack stack)
+    {
+        float a = (float)stack.pop();
+        float b =  (float)stack.pop();
+        float result = a+b;
+        stack.push(result);
+    }
+
+    static void StackSubtraction(ArrayStack stack)
+    {
+        float a = (float)stack.pop();
+        float b =  (float)stack.pop();
+        float result = b-a;
+        stack.push(result);
+    }
+
+    static void StackMultiplication(ArrayStack stack)
+    {
+        float a = (float)stack.pop();
+        float b =  (float)stack.pop();
+        float result = a*b;
+        stack.push(result);
+    }
+
+    static void StackDivision(ArrayStack stack)
+    {
+        float a = (float)stack.pop();
+        float b = (float)stack.pop();
+        float result = b/a;
+        stack.push(result);
+    }
+
+    static void StackPower(ArrayStack stack)
+    {
+        float a = (float)stack.pop();
+        float b =  (float)stack.pop();
+        float result =(float) Math.pow(b,a);
+        stack.push(result);
     }
 
     static String infix2Postfix(String userInput, ArrayStack stack) {
@@ -56,14 +135,6 @@ public class Main {
                         for (int j = 0; j <= stack.size(); j++) {//loop through stack
                             if (stack.isEmpty())
                                 break;
-                            //TODO see if this section can be removed
-                            char top = (char) stack.top();
-                            if (top == ')' || top == '(') {
-                                stack.push(c);
-                                if (top == '(')
-                                    stack.pop();
-                                break;
-                            }
                             if (stackPrecedence >= precedence) {//while our stack precedence is larger then our current input char, pop the stack
                                 outputString += (char) stack.pop();
                             }
