@@ -12,7 +12,6 @@ public class Main {
         String userInput = JOptionPane.showInputDialog(null, "Enter an infix notation");
         if (isValidInput(userInput)) {//check if input is valid
             outputString = infix2Postfix(userInput, stack);
-            //outputString+=(char)stack.pop();
         }
         JOptionPane.showMessageDialog(null, "Answer is: " + outputString);
     }
@@ -57,7 +56,7 @@ public class Main {
                         for (int j = 0; j <= stack.size(); j++) {//loop through stack
                             if (stack.isEmpty())
                                 break;
-
+                            //TODO see if this section can be removed
                             char top = (char) stack.top();
                             if (top == ')' || top == '(') {
                                 stack.push(c);
@@ -115,7 +114,8 @@ public class Main {
                 return 2;
             case '(':
             case ')':
-                return -1;
+                return -1; //only want to push parentheses to stack when we want to, this way parentheses will not be pushed
+                            // by precedence since every other operator has a greater precedence
         }
         return 0;
     }
